@@ -126,17 +126,46 @@ pub const DC_CHAT_ID_LAST_SPECIAL: ChatId = ChatId::new(9);
 )]
 #[repr(u32)]
 pub enum Chattype {
-    /// 1:1 chat.
+    /// A 1:1 chat, i.e. a normal chat with a single contact.
+    ///
+    /// Created by [`ChatId::create_for_contact`].
     Single = 100,
 
     /// Group chat.
+    ///
+    /// Created by [`crate::chat::create_group_chat`].
     Group = 120,
 
-    /// Mailing list.
+    /// An (unencrypted) mailing list,
+    /// created by an incoming mailing list email.
     Mailinglist = 140,
 
-    /// Broadcast list.
-    Broadcast = 160,
+    /// Outgoing broadcast channel, called "Channel" in the UI.
+    ///
+    /// The user can send into this chat,
+    /// and all recipients will receive messages
+    /// in an `InBroadcast`.
+    ///
+    /// Called `broadcast` here rather than `channel`,
+    /// because the word "channel" already appears a lot in the code,
+    /// which would make it hard to grep for it.
+    ///
+    /// Created by [`crate::chat::create_broadcast`].
+    OutBroadcast = 160,
+
+    /// Incoming broadcast channel, called "Channel" in the UI.
+    ///
+    /// This chat is read-only,
+    /// and we do not know who the other recipients are.
+    ///
+    /// This is similar to a `MailingList`,
+    /// with the main difference being that
+    /// `InBroadcast`s are encrypted.
+    ///
+    /// Called `broadcast` here rather than `channel`,
+    /// because the word "channel" already appears a lot in the code,
+    /// which would make it hard to grep for it.
+    InBroadcast = 165,
 }
 
 pub const DC_MSG_ID_DAYMARKER: u32 = 9;
@@ -239,7 +268,7 @@ mod tests {
         assert_eq!(Chattype::Single, Chattype::from_i32(100).unwrap());
         assert_eq!(Chattype::Group, Chattype::from_i32(120).unwrap());
         assert_eq!(Chattype::Mailinglist, Chattype::from_i32(140).unwrap());
-        assert_eq!(Chattype::Broadcast, Chattype::from_i32(160).unwrap());
+        assert_eq!(Chattype::OutBroadcast, Chattype::from_i32(160).unwrap());
     }
 
     #[test]
