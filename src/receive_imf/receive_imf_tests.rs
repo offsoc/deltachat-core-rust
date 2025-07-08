@@ -5194,3 +5194,55 @@ async fn test_partial_download_key_contact_lookup() -> Result<()> {
 
     Ok(())
 }
+
+/// Tests that outgoing unencrypted message
+/// is assigned to a chat with email-contact.
+///
+/// Previously such message got assigned to Saved Messages
+/// if it had In-Reply-To due to a bug resulting
+/// in attempt to lookup key-contacts in the existing
+/// chat pointed to by In-Reply-To.
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn test_outgoing_unencrypted_chat_assignment() {
+    let mut tcm = TestContextManager::new();
+    let alice = &tcm.alice().await;
+    let bob = &tcm.bob().await;
+
+    tcm.section("Alice receives unencrypted message from Bob");
+    receive_imf(
+        alice,
+        b"From: bob@example.net\n\
+          To: alice@example.org\n\
+          Subject: Message from Bob\n\
+          Message-ID: <message@example.net>\n\
+          Chat-Version: 1.0\n\
+          Date: Sun, 22 Mar 2020 22:37:57 +0000\n\
+          \n\
+          Hello, Alice!\n",
+        false,
+    )
+    .await
+    .unwrap()
+    .unwrap();
+
+    tcm.section("Alice sends unencrypted reply to Bob from another device");
+    let received = receive_imf(
+        alice,
+        b"From: alice@example.org\n\
+          To: bob@example.net\n\
+          Subject: Message from Alice\n\
+          Message-ID: <message@example.org>\n\
+          Chat-Version: 1.0\n\
+          In-Reply-To: <message@example.net>\n\
+          Date: Sun, 22 Mar 2020 22:37:57 +0000\n\
+          \n\
+          Hello, Bob!\n",
+        false,
+    )
+    .await
+    .unwrap()
+    .unwrap();
+
+    let chat = alice.create_email_chat(bob).await;
+    assert_eq!(received.chat_id, chat.id);
+}
