@@ -414,8 +414,7 @@ async fn get_to_and_past_contact_ids(
                     }
                     false => vec![],
                 };
-                if chat_id.is_some()
-                || (mime_parser.was_encrypted() && !ids.contains(&None))
+                if mime_parser.was_encrypted() && !ids.contains(&None)
                 // Prefer creating PGP chats if there are any key-contacts. At least this prevents
                 // from replying unencrypted.
                 || ids
