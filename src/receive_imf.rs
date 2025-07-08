@@ -394,13 +394,31 @@ async fn get_to_and_past_contact_ids(
                 // This is an encrypted 1:1 chat.
                 to_ids = pgp_to_ids
             } else if let Some(chat_id) = chat_id {
-                to_ids = lookup_key_contacts_by_address_list(
-                    context,
-                    &mime_parser.recipients,
-                    to_member_fingerprints,
-                    Some(chat_id),
-                )
-                .await?;
+                to_ids = match mime_parser.was_encrypted() {
+                    true => {
+                        lookup_key_contacts_by_address_list(
+                            context,
+                            &mime_parser.recipients,
+                            to_member_fingerprints,
+                            Some(chat_id),
+                        )
+                        .await?
+                    }
+                    false => {
+                        add_or_lookup_contacts_by_address_list(
+                            context,
+                            &mime_parser.recipients,
+                            if !mime_parser.incoming {
+                                Origin::OutgoingTo
+                            } else if incoming_origin.is_known() {
+                                Origin::IncomingTo
+                            } else {
+                                Origin::IncomingUnknownTo
+                            },
+                        )
+                        .await?
+                    }
+                }
             } else {
                 let ids = match mime_parser.was_encrypted() {
                     true => {
