@@ -224,6 +224,14 @@ impl CommandApi {
         self.accounts.read().await.get_selected_account_id()
     }
 
+    /// Set the order of accounts.
+    /// The provided list should contain all account IDs in the desired order.
+    /// If an account ID is missing from the list, it will be appended at the end.
+    /// If the list contains non-existent account IDs, they will be ignored.
+    async fn set_accounts_order(&self, order: Vec<u32>) -> Result<()> {
+        self.accounts.write().await.set_accounts_order(order).await
+    }
+
     /// Get a list of all configured accounts.
     async fn get_all_accounts(&self) -> Result<Vec<Account>> {
         let mut accounts = Vec::new();
