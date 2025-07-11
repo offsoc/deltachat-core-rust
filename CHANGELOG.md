@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.1.0] - 2025-07-11
+
+### Features / Changes
+
+- Add account ordering functionality ([#6993](https://github.com/chatmail/core/pull/6993)).
+- feat: Make it possible to leave broadcast channels ([#6984](https://github.com/chatmail/core/pull/6984))
+- Migrations: Use tools::Time to measure time for logging.
+- Log emitted logging events with `tracing`.
+- Ensure_and_debug_assert{,_eq,_ne} macros combining `debug_assert*` and anyhow::ensure ([#6907](https://github.com/chatmail/core/pull/6907)).
+
+### Fixes
+
+- Use Viewtype::File for messages with invalid images, images of unknown size, images > 50 Mpx ([#6825](https://github.com/chatmail/core/pull/6825)).
+- Don't apply chat name and avatar changes from non-members.
+
+### Documentation
+
+- Update showpadlock ffi.
+
+### Miscellaneous Tasks
+
+- cargo: Update cordyceps from 0.3.2 to 0.3.4.
+
+### Tests
+
+- Add option to save database on test failure ([#6992](https://github.com/chatmail/core/pull/6992)).
+
 ## [2.0.0] - 2025-07-09
 
 This release changes the way the core handles contact keys.
@@ -6426,3 +6453,4 @@ https://github.com/chatmail/core/pulls?q=is%3Apr+is%3Aclosed
 [1.159.5]: https://github.com/chatmail/core/compare/v1.159.4..v1.159.5
 [1.160.0]: https://github.com/chatmail/core/compare/v1.159.5..v1.160.0
 [2.0.0]: https://github.com/chatmail/core/compare/v1.160.0..v2.0.0
+[2.1.0]: https://github.com/chatmail/core/compare/v2.0.0..v2.1.0
