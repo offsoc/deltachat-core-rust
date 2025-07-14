@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.2.0] - 2025-07-14
+
+### API-Changes
+
+- Add chat::create_group_ex(), deprecate create_group_chat() ([#6927](https://github.com/chatmail/core/pull/6927)).
+- jsonrpc: Add CommandApi::create_group_chat_unencrypted() ([#6927](https://github.com/chatmail/core/pull/6927)).
+- [**breaking**] In ChatListItem, replace is_group and is_(out_)broadcast with chat_type property ([#7003](https://github.com/chatmail/core/pull/7003)).
+
+### Features / Changes
+
+- Log failed debug assertions in all configurations.
+- Donation request device message ([#6913](https://github.com/chatmail/core/pull/6913)).
+- Advance next UID even if connection fails while fetching.
+
+### Fixes
+
+- Always prefer the last header.
+
+### Tests
+
+- Tune down DELTACHAT_SAVE_TMP_DB hint ([#6998](https://github.com/chatmail/core/pull/6998)).
+- Unencrypted group creation ([#6927](https://github.com/chatmail/core/pull/6927)).
+
 ## [2.1.0] - 2025-07-11
 
 ### Features / Changes
@@ -6454,3 +6477,4 @@ https://github.com/chatmail/core/pulls?q=is%3Apr+is%3Aclosed
 [1.160.0]: https://github.com/chatmail/core/compare/v1.159.5..v1.160.0
 [2.0.0]: https://github.com/chatmail/core/compare/v1.160.0..v2.0.0
 [2.1.0]: https://github.com/chatmail/core/compare/v2.0.0..v2.1.0
+[2.2.0]: https://github.com/chatmail/core/compare/v2.1.0..v2.2.0
