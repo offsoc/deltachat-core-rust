@@ -181,10 +181,10 @@ pub enum SystemMessage {
     /// Chat ephemeral message timer is changed.
     EphemeralTimerChanged = 10,
 
-    /// "Messages are guaranteed to be end-to-end encrypted from now on."
+    /// "Messages are end-to-end encrypted."
     ChatProtectionEnabled = 11,
 
-    /// "%1$s sent a message from another device."
+    /// "%1$s sent a message from another device.", deprecated 2025-07
     ChatProtectionDisabled = 12,
 
     /// Message can't be sent because of `Invalid unencrypted mail to <>`
@@ -213,6 +213,9 @@ pub enum SystemMessage {
 
     /// This message contains a users iroh node address.
     IrohNodeAddr = 40,
+
+    /// "Messages are end-to-end encrypted."
+    ChatE2ee = 50,
 }
 
 const MIME_AC_SETUP_FILE: &str = "application/autocrypt-setup";

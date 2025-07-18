@@ -349,6 +349,8 @@ impl ChatId {
             chat_id
                 .add_protection_msg(context, ProtectionStatus::Protected, None, timestamp)
                 .await?;
+        } else {
+            chat_id.maybe_add_encrypted_msg(context, timestamp).await?;
         }
 
         info!(
@@ -601,6 +603,42 @@ impl ChatId {
         )
         .await?;
 
+        Ok(())
+    }
+
+    /// Adds message "Messages are end-to-end encrypted" if appropriate.
+    ///
+    /// This function is rather slow because it does a lot of database queries,
+    /// but this is fine because it is only called on chat creation.
+    async fn maybe_add_encrypted_msg(self, context: &Context, timestamp_sort: i64) -> Result<()> {
+        let chat = Chat::load_from_db(context, self).await?;
+
+        // as secure-join adds its own message on success (after some other messasges),
+        // we do not want to add "Messages are end-to-end encrypted" on chat creation.
+        // we detect secure join by `can_send` (for Bob, scanner side) and by `blocked` (for Alice, inviter side) below.
+        if !chat.is_encrypted(context).await?
+            || self <= DC_CHAT_ID_LAST_SPECIAL
+            || chat.is_device_talk()
+            || chat.is_self_talk()
+            || (!chat.can_send(context).await? && !chat.is_contact_request())
+            || chat.blocked == Blocked::Yes
+        {
+            return Ok(());
+        }
+
+        let text = stock_str::messages_e2e_encrypted(context).await;
+        add_info_msg_with_cmd(
+            context,
+            self,
+            &text,
+            SystemMessage::ChatE2ee,
+            timestamp_sort,
+            None,
+            None,
+            None,
+            None,
+        )
+        .await?;
         Ok(())
     }
 
@@ -2672,6 +2710,10 @@ impl ChatIdBlocked {
                     Some(contact_id),
                     smeared_time,
                 )
+                .await?;
+        } else {
+            chat_id
+                .maybe_add_encrypted_msg(context, smeared_time)
                 .await?;
         }
 

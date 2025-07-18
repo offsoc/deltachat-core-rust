@@ -65,9 +65,6 @@ pub enum StockMessage {
     #[strum(props(fallback = "GIF"))]
     Gif = 23,
 
-    #[strum(props(fallback = "Encrypted message"))]
-    EncryptedMsg = 24,
-
     #[strum(props(fallback = "End-to-end encryption available"))]
     E2eAvailable = 25,
 
@@ -380,9 +377,10 @@ pub enum StockMessage {
     #[strum(props(fallback = "I left the group."))]
     MsgILeftGroup = 166,
 
-    #[strum(props(fallback = "Messages are guaranteed to be end-to-end encrypted from now on."))]
+    #[strum(props(fallback = "Messages are end-to-end encrypted."))]
     ChatProtectionEnabled = 170,
 
+    // deprecated 2025-07
     #[strum(props(fallback = "%1$s sent a message from another device."))]
     ChatProtectionDisabled = 171,
 
@@ -1031,8 +1029,8 @@ pub(crate) async fn error_no_network(context: &Context) -> String {
     translated(context, StockMessage::ErrorNoNetwork).await
 }
 
-/// Stock string: `Messages are guaranteed to be end-to-end encrypted from now on.`
-pub(crate) async fn chat_protection_enabled(context: &Context) -> String {
+/// Stock string: `Messages are end-to-end encrypted.`
+pub(crate) async fn messages_e2e_encrypted(context: &Context) -> String {
     translated(context, StockMessage::ChatProtectionEnabled).await
 }
 
@@ -1303,7 +1301,7 @@ impl Context {
                     "[Error] No contact_id given".to_string()
                 }
             }
-            ProtectionStatus::Protected => chat_protection_enabled(self).await,
+            ProtectionStatus::Protected => messages_e2e_encrypted(self).await,
         }
     }
 
