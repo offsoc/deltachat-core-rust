@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.3.0] - 2025-07-19
+
+### Features / Changes
+
+- Add "e2ee encrypted" info message to all e2ee chats ([#7008](https://github.com/chatmail/core/pull/7008)).
+- repl: Print errors and debug logs to stderr.
+- `{ensure_and,logged}_debug_assert`: Don't evaluate condition twice.
+- Log when background fetch of all accounts finishes successfully.
+- Log the number of read/written bytes on IMAP stream read error ([#6924](https://github.com/chatmail/core/pull/6924)).
+
+### Fixes
+
+- Ignore protected headers in outer message part ([#6357](https://github.com/chatmail/core/pull/6357)).
+- List e-mail contacts in repl listcontacts command.
+- Save peer address for LoggingStream early.
+
 ## [2.2.0] - 2025-07-14
 
 ### API-Changes
@@ -6478,3 +6494,4 @@ https://github.com/chatmail/core/pulls?q=is%3Apr+is%3Aclosed
 [2.0.0]: https://github.com/chatmail/core/compare/v1.160.0..v2.0.0
 [2.1.0]: https://github.com/chatmail/core/compare/v2.0.0..v2.1.0
 [2.2.0]: https://github.com/chatmail/core/compare/v2.1.0..v2.2.0
+[2.3.0]: https://github.com/chatmail/core/compare/v2.2.0..v2.3.0
