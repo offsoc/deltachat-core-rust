@@ -3050,6 +3050,39 @@ async fn test_auto_accept_protected_group_for_bots() -> Result<()> {
     Ok(())
 }
 
+/// Regression test for a bug where receive_imf() failed
+/// if the sender of a verification-gossiping message
+/// also put itself into the To header.
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn test_verification_gossip() -> Result<()> {
+    let mut tcm = TestContextManager::new();
+    let alice = &tcm.alice().await;
+    let bob = &tcm.bob().await;
+    let fiona = &tcm.fiona().await;
+
+    mark_as_verified(alice, bob).await;
+    mark_as_verified(bob, alice).await;
+
+    // This is message sent by Alice with verified encryption
+    // that gossips Fiona's verification,
+    // and for some reason, Alice also put herself into the To: header.
+    let imf_raw =
+        include_bytes!("../../test-data/message/verification-gossip-also-sent-to-from.eml");
+
+    // The regression test is that receive_imf() doesn't panic:
+    let msg = receive_imf(bob, imf_raw, false).await?.unwrap();
+    let msg = Message::load_from_db(bob, msg.msg_ids[0]).await?;
+    assert_eq!(msg.text, "Hello!");
+    assert!(
+        bob.add_or_lookup_contact(fiona)
+            .await
+            .is_verified(bob)
+            .await?
+    );
+
+    Ok(())
+}
+
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn test_bot_accepts_another_group_after_qr_scan() -> Result<()> {
     let mut tcm = TestContextManager::new();
