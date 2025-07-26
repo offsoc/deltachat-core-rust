@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.7.0] - 2025-07-26
+
+### Features / Changes
+
+- Mimefactory: Order message recipients by time of addition ([#6872](https://github.com/chatmail/core/pull/6872)).
+- Put the debug/release build version into the info ([#7034](https://github.com/chatmail/core/pull/7034)).
+
+### Fixes
+
+- Realtime late join ([#6869](https://github.com/chatmail/core/pull/6869)).
+- Do not fail to upgrade if the verifier of a contact doesn't exist anymore ([#7044](https://github.com/chatmail/core/pull/7044)).
+
+### Tests
+
+- Add regression test for verification-gossiping crash ([#7033](https://github.com/chatmail/core/pull/7033)).
+
 ## [2.6.0] - 2025-07-23
 
 ### Fixes
@@ -6533,3 +6549,4 @@ https://github.com/chatmail/core/pulls?q=is%3Apr+is%3Aclosed
 [2.4.0]: https://github.com/chatmail/core/compare/v2.3.0..v2.4.0
 [2.5.0]: https://github.com/chatmail/core/compare/v2.4.0..v2.5.0
 [2.6.0]: https://github.com/chatmail/core/compare/v2.5.0..v2.6.0
+[2.7.0]: https://github.com/chatmail/core/compare/v2.6.0..v2.7.0
